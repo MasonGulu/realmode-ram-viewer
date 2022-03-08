@@ -74,10 +74,8 @@ entry:
     mov ah, 0
     mov al, 3
     int 0x10
-    mov ah, 0x01
-    mov ch, 10   ; Start line
-    mov cl, 15  ; End line
-    int 0x10
+    writetocga 0x0A, 0x06
+    writetocga 0x0B, 0x07
     mov ax, cs 
     copybytes CONST_STRING_LEN, ax, STRING_ribbon, CONST_SCREENRAMSEG, (CONST_BYTESTHATFIT*2)
 main_loop:
@@ -112,10 +110,10 @@ key_handle:
     cmp ah, 75  ; Numpad left/4
     je _handle_left 
 
-    cmp ah, 49  ; page up
+    cmp ah, 0x49  ; page up
     je _handle_pageup 
 
-    cmp ah, 51  ; page down
+    cmp ah, 0x51  ; page down
     je _handle_pagedown
 
     cmp al, 'a'
@@ -150,13 +148,13 @@ _handle_right:
 
 _handle_down:
     mov ax, [DATA_segment]
-    add ax, 20
+    add ax, 0x10
     mov [DATA_segment], ax 
     jmp main_loop
 
 _handle_up:
     mov ax, [DATA_segment]
-    sub ax, 20
+    sub ax, 0x10
     mov [DATA_segment], ax 
     jmp main_loop
 
